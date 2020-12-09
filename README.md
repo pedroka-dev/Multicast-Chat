@@ -1,2 +1,2 @@
 # Multicast-chat
-An C# Multicast Chat with Simple Encryption
+A Multicast Chat with Simple Encryption made in C# .NET
