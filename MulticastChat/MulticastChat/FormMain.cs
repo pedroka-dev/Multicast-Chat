@@ -28,10 +28,13 @@ namespace MulticastChat
 
         private void SendMessage(String message)
         {
-            Byte[] buff;
-            buff = Encoding.UTF8.GetBytes(textBoxUserName.Text + ": " + message);
-            client.Send(buff, buff.Length, multiCastEP);
-            textBoxNewMessage.Text = "";
+            if (message.Length > 0)
+            {
+                Byte[] buff;
+                buff = Encoding.UTF8.GetBytes(textBoxUserName.Text + ": " + message);
+                client.Send(buff, buff.Length, multiCastEP);
+                textBoxNewMessage.Text = "";
+            }
         }
 
         private void JoinGroup()
@@ -76,13 +79,17 @@ namespace MulticastChat
                 Application.DoEvents();
                 Thread.Sleep(500);
                 stayAlive = false;
-                while (receiveThread.IsAlive) Application.DoEvents();
-                receiveThread.Join();
+                Application.DoEvents();
+                receiveThread.Abort();
+                //while (receiveThread.IsAlive) Application.DoEvents();
+
                 client.DropMulticastGroup(group);
                 client.Close();
                 client = null;
                 group = null;
                 multiCastEP = null;
+
+                Thread.Sleep(500);
             }
         }
 
@@ -179,8 +186,6 @@ namespace MulticastChat
                 textBoxNewMessage.Enabled = true;
                 buttonSend.Enabled = true;
                 buttonJoin.Enabled = false;
-
-                MessageBox.Show("Joined the Chat room.", "Login sucessfull");
             }
         }
 
@@ -188,6 +193,7 @@ namespace MulticastChat
         {
             this.LeaveGroup();
 
+            listBoxMessageChat.Items.Clear();
             buttonExit.Enabled = false;
             listBoxMessageChat.Enabled = false;
             textBoxNewMessage.Enabled = false;

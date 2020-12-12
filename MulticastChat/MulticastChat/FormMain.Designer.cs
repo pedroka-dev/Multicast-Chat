@@ -52,7 +52,7 @@
             // labelUserName
             // 
             this.labelUserName.AutoSize = true;
-            this.labelUserName.Location = new System.Drawing.Point(15, 10);
+            this.labelUserName.Location = new System.Drawing.Point(12, 13);
             this.labelUserName.Name = "labelUserName";
             this.labelUserName.Size = new System.Drawing.Size(83, 17);
             this.labelUserName.TabIndex = 0;
@@ -109,9 +109,9 @@
             // 
             // buttonJoin
             // 
-            this.buttonJoin.Location = new System.Drawing.Point(18, 204);
+            this.buttonJoin.Location = new System.Drawing.Point(12, 234);
             this.buttonJoin.Name = "buttonJoin";
-            this.buttonJoin.Size = new System.Drawing.Size(79, 36);
+            this.buttonJoin.Size = new System.Drawing.Size(79, 37);
             this.buttonJoin.TabIndex = 6;
             this.buttonJoin.Text = "Join Chat";
             this.buttonJoin.UseVisualStyleBackColor = true;
@@ -120,9 +120,9 @@
             // buttonExit
             // 
             this.buttonExit.Enabled = false;
-            this.buttonExit.Location = new System.Drawing.Point(252, 204);
+            this.buttonExit.Location = new System.Drawing.Point(259, 234);
             this.buttonExit.Name = "buttonExit";
-            this.buttonExit.Size = new System.Drawing.Size(79, 36);
+            this.buttonExit.Size = new System.Drawing.Size(79, 40);
             this.buttonExit.TabIndex = 7;
             this.buttonExit.Text = "Exit Chat";
             this.buttonExit.UseVisualStyleBackColor = true;
@@ -135,14 +135,14 @@
             this.listBoxMessageChat.ItemHeight = 16;
             this.listBoxMessageChat.Location = new System.Drawing.Point(15, 21);
             this.listBoxMessageChat.Name = "listBoxMessageChat";
-            this.listBoxMessageChat.Size = new System.Drawing.Size(298, 196);
+            this.listBoxMessageChat.Size = new System.Drawing.Size(298, 180);
             this.listBoxMessageChat.TabIndex = 8;
             this.listBoxMessageChat.SelectedIndexChanged += new System.EventHandler(this.listBoxChat_SelectedIndexChanged);
             // 
             // labelNewMessage
             // 
             this.labelNewMessage.AutoSize = true;
-            this.labelNewMessage.Location = new System.Drawing.Point(12, 220);
+            this.labelNewMessage.Location = new System.Drawing.Point(19, 206);
             this.labelNewMessage.Name = "labelNewMessage";
             this.labelNewMessage.Size = new System.Drawing.Size(100, 17);
             this.labelNewMessage.TabIndex = 10;
@@ -152,7 +152,7 @@
             // textBoxNewMessage
             // 
             this.textBoxNewMessage.Enabled = false;
-            this.textBoxNewMessage.Location = new System.Drawing.Point(15, 239);
+            this.textBoxNewMessage.Location = new System.Drawing.Point(22, 225);
             this.textBoxNewMessage.Name = "textBoxNewMessage";
             this.textBoxNewMessage.Size = new System.Drawing.Size(213, 22);
             this.textBoxNewMessage.TabIndex = 9;
@@ -161,7 +161,7 @@
             // buttonSend
             // 
             this.buttonSend.Enabled = false;
-            this.buttonSend.Location = new System.Drawing.Point(249, 238);
+            this.buttonSend.Location = new System.Drawing.Point(256, 224);
             this.buttonSend.Name = "buttonSend";
             this.buttonSend.Size = new System.Drawing.Size(57, 23);
             this.buttonSend.TabIndex = 9;
@@ -208,7 +208,7 @@
             this.groupBox1.Controls.Add(this.checkBoxUseEncryption);
             this.groupBox1.Controls.Add(this.labelPort);
             this.groupBox1.Controls.Add(this.textBoxPort);
-            this.groupBox1.Location = new System.Drawing.Point(11, 46);
+            this.groupBox1.Location = new System.Drawing.Point(12, 59);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(326, 152);
             this.groupBox1.TabIndex = 15;
@@ -222,7 +222,7 @@
             this.groupBox2.Controls.Add(this.textBoxNewMessage);
             this.groupBox2.Controls.Add(this.labelNewMessage);
             this.groupBox2.Controls.Add(this.listBoxMessageChat);
-            this.groupBox2.Location = new System.Drawing.Point(11, 246);
+            this.groupBox2.Location = new System.Drawing.Point(352, 10);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(326, 270);
             this.groupBox2.TabIndex = 16;
@@ -233,7 +233,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(351, 528);
+            this.ClientSize = new System.Drawing.Size(687, 286);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonExit);
