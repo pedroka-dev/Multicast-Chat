@@ -133,8 +133,6 @@
             this.listBoxMessageChat.Enabled = false;
             this.listBoxMessageChat.FormattingEnabled = true;
             this.listBoxMessageChat.ItemHeight = 16;
-            this.listBoxMessageChat.Items.AddRange(new object[] {
-            " "});
             this.listBoxMessageChat.Location = new System.Drawing.Point(15, 21);
             this.listBoxMessageChat.Name = "listBoxMessageChat";
             this.listBoxMessageChat.Size = new System.Drawing.Size(298, 196);
@@ -158,6 +156,7 @@
             this.textBoxNewMessage.Name = "textBoxNewMessage";
             this.textBoxNewMessage.Size = new System.Drawing.Size(213, 22);
             this.textBoxNewMessage.TabIndex = 9;
+            this.textBoxNewMessage.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxNewMessage_KeyPress);
             // 
             // buttonSend
             // 
@@ -168,6 +167,7 @@
             this.buttonSend.TabIndex = 9;
             this.buttonSend.Text = "Send";
             this.buttonSend.UseVisualStyleBackColor = true;
+            this.buttonSend.Click += new System.EventHandler(this.buttonSend_Click);
             // 
             // checkBoxUseEncryption
             // 
