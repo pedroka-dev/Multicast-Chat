@@ -29,24 +29,27 @@ namespace MulticastChat
         private void SendMessage(String message)
         {
             Byte[] buff;
-            buff = Encoding.ASCII.GetBytes(textBoxUserName.Text + ": " + message);
+            buff = Encoding.UTF8.GetBytes(textBoxUserName.Text + ": " + message);
             client.Send(buff, buff.Length, multiCastEP);
             textBoxNewMessage.Text = "";
         }
 
         private void JoinGroup()
         {
-            //try
-            //{
+            try
+            {
 
                 if (!int.TryParse(textBoxPort.Text, out port))
                     throw new ApplicationException("Invalid Port Number");
                 if (!IPAddress.TryParse(textBoxAddress.Text, out group))
                     throw new ApplicationException("Invalid Multicast Group Address");
 
-                client = new UdpClient(port);
+                client = new UdpClient();
+                client.Client.ExclusiveAddressUse = false;
+                client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
                 client.JoinMulticastGroup(group, TIME_TO_LIVE);
                 multiCastEP = new IPEndPoint(group, port);
+                client.Client.Bind(new IPEndPoint(IPAddress.Any, port));
                 this.stayAlive = true;
                 receiveThread = new Thread(this.runThread);
                 receiveThread.Start();
@@ -57,12 +60,12 @@ namespace MulticastChat
                 //this.buttonEnd.Enabled = true;
                 //this.buttonSend.Enabled = true;
                 textBoxNewMessage.Focus();
-            //}
-            //catch (Exception e)
-            //{
-            //    MessageBox.Show("An error occured while joining:\n" + e.Message, "Connection Error");
-            //    this.Dispose();
-            //}
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("An error occured while joining:\n" + e.Message, "Connection Error");
+                this.Dispose();
+            }
         }
 
         private void LeaveGroup()
@@ -87,12 +90,12 @@ namespace MulticastChat
         {
             Byte[] buff;
             String message;
-            IPEndPoint ep = multiCastEP;
+            IPEndPoint ep = null;
 
             while (stayAlive)
             { 
                 buff = client.Receive(ref ep);
-                message = Encoding.ASCII.GetString(buff);
+                message = Encoding.UTF8.GetString(buff);
                 this.Invoke(this.listOngoing, message);
                 Thread.Sleep(10);
             }
