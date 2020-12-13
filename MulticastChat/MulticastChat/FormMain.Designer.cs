@@ -135,7 +135,7 @@
             this.listBoxMessageChat.ItemHeight = 16;
             this.listBoxMessageChat.Location = new System.Drawing.Point(15, 21);
             this.listBoxMessageChat.Name = "listBoxMessageChat";
-            this.listBoxMessageChat.Size = new System.Drawing.Size(298, 180);
+            this.listBoxMessageChat.Size = new System.Drawing.Size(376, 180);
             this.listBoxMessageChat.TabIndex = 8;
             this.listBoxMessageChat.SelectedIndexChanged += new System.EventHandler(this.listBoxChat_SelectedIndexChanged);
             // 
@@ -154,14 +154,14 @@
             this.textBoxNewMessage.Enabled = false;
             this.textBoxNewMessage.Location = new System.Drawing.Point(22, 225);
             this.textBoxNewMessage.Name = "textBoxNewMessage";
-            this.textBoxNewMessage.Size = new System.Drawing.Size(213, 22);
+            this.textBoxNewMessage.Size = new System.Drawing.Size(306, 22);
             this.textBoxNewMessage.TabIndex = 9;
             this.textBoxNewMessage.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxNewMessage_KeyPress);
             // 
             // buttonSend
             // 
             this.buttonSend.Enabled = false;
-            this.buttonSend.Location = new System.Drawing.Point(256, 224);
+            this.buttonSend.Location = new System.Drawing.Point(334, 224);
             this.buttonSend.Name = "buttonSend";
             this.buttonSend.Size = new System.Drawing.Size(57, 23);
             this.buttonSend.TabIndex = 9;
@@ -224,7 +224,7 @@
             this.groupBox2.Controls.Add(this.listBoxMessageChat);
             this.groupBox2.Location = new System.Drawing.Point(352, 10);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(326, 270);
+            this.groupBox2.Size = new System.Drawing.Size(399, 274);
             this.groupBox2.TabIndex = 16;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Message Chat";
@@ -233,7 +233,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(687, 286);
+            this.ClientSize = new System.Drawing.Size(756, 286);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonExit);
@@ -242,6 +242,7 @@
             this.Controls.Add(this.labelUserName);
             this.Name = "FormMain";
             this.Text = "Multicast Chat";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

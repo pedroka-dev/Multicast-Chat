@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,16 +24,24 @@ namespace MulticastChat
         private IPEndPoint multiCastEP = null;
         private bool stayAlive = true;
         private Thread receiveThread = null;
-        private string defaultNameText = "";
         public delegate void dListOngoing(string message);
         public dListOngoing listOngoing;
+        public bool useEncription;
+        RijndaelManaged rijndaelEncryption = new RijndaelManaged();
 
         private void SendMessage(String message)
         {
             if (message.Length > 0)
             {
                 Byte[] buff;
-                buff = Encoding.UTF8.GetBytes(textBoxUserName.Text + ": " + message);
+                if (useEncription)
+                {
+                    buff = EncryptStringToBytes(textBoxUserName.Text + ": " + message, rijndaelEncryption.Key, rijndaelEncryption.IV);
+                }
+                else 
+                {
+                    buff = Encoding.Unicode.GetBytes(textBoxUserName.Text + ": " + message);
+                }
                 client.Send(buff, buff.Length, multiCastEP);
                 textBoxNewMessage.Text = "";
             }
@@ -39,36 +49,41 @@ namespace MulticastChat
 
         private void JoinGroup()
         {
-            try
-            {
+            if (!int.TryParse(textBoxPort.Text, out port))
+                throw new ApplicationException("Invalid Port Number");
+            if (!IPAddress.TryParse(textBoxAddress.Text, out group))
+                throw new ApplicationException("Invalid Multicast Group Address");
 
-                if (!int.TryParse(textBoxPort.Text, out port))
-                    throw new ApplicationException("Invalid Port Number");
-                if (!IPAddress.TryParse(textBoxAddress.Text, out group))
-                    throw new ApplicationException("Invalid Multicast Group Address");
+            useEncription = checkBoxUseEncryption.Checked;
 
-                client = new UdpClient();
-                client.Client.ExclusiveAddressUse = false;
-                client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-                client.JoinMulticastGroup(group, TIME_TO_LIVE);
-                multiCastEP = new IPEndPoint(group, port);
-                client.Client.Bind(new IPEndPoint(IPAddress.Any, port));
-                this.stayAlive = true;
-                receiveThread = new Thread(this.runThread);
-                receiveThread.Start();
-                this.SendMessage("has joined the chat!");
-                //this.AcceptButton = buttonSend;
-                //this.CancelButton = buttonEnd;
-                //this.buttonJoin.Enabled = false;
-                //this.buttonEnd.Enabled = true;
-                //this.buttonSend.Enabled = true;
-                textBoxNewMessage.Focus();
-            }
-            catch (Exception e)
+            if (useEncription)
             {
-                MessageBox.Show("An error occured while joining:\n" + e.Message, "Connection Error");
-                this.Dispose();
+                byte[] key = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
+                byte[] iv = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F};
+
+                rijndaelEncryption.Key = key;
+                rijndaelEncryption.IV = iv;
+                //rijndaelEncryption.Key = Encoding.UTF32.GetBytes(textBoxKey.Text);
+                //rijndaelEncryption.IV = Encoding.Unicode.GetBytes(textBoxKey.Text);
             }
+
+            client = new UdpClient();
+            client.Client.ExclusiveAddressUse = false;
+            client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            client.JoinMulticastGroup(group, TIME_TO_LIVE);
+            multiCastEP = new IPEndPoint(group, port);
+            client.Client.Bind(new IPEndPoint(IPAddress.Any, port));
+            this.stayAlive = true;
+            receiveThread = new Thread(this.runThread);
+            receiveThread.Start();
+            this.SendMessage("has joined the chat!");
+            //this.AcceptButton = buttonSend;
+            //this.CancelButton = buttonEnd;
+            //this.buttonJoin.Enabled = false;
+            //this.buttonEnd.Enabled = true;
+            //this.buttonSend.Enabled = true;
+            textBoxNewMessage.Focus();
+
         }
 
         private void LeaveGroup()
@@ -102,11 +117,19 @@ namespace MulticastChat
             while (stayAlive)
             { 
                 buff = client.Receive(ref ep);
-                message = Encoding.UTF8.GetString(buff);
+                if (useEncription)
+                {
+                    message = DecryptStringFromBytes(buff, rijndaelEncryption.Key, rijndaelEncryption.IV);
+                }
+                else
+                {
+                    message = Encoding.Unicode.GetString(buff);
+                }
                 this.Invoke(this.listOngoing, message);
                 Thread.Sleep(10);
             }
         }
+
 
         public void displayMessage(string message)
         {
@@ -118,6 +141,76 @@ namespace MulticastChat
         {
             InitializeComponent();
         }
+
+        private byte[] EncryptStringToBytes(string plainText, byte[] Key, byte[] IV)
+        {
+            if (plainText == null || plainText.Length <= 0)
+                throw new ArgumentNullException("plainText");
+            if (Key == null || Key.Length <= 0)
+                throw new ArgumentNullException("Key");
+            if (IV == null || IV.Length <= 0)
+                throw new ArgumentNullException("IV");
+            byte[] encrypted;
+
+            using (RijndaelManaged rijAlg = new RijndaelManaged())
+            {
+                rijAlg.Key = Key;
+                rijAlg.IV = IV;
+
+                ICryptoTransform encryptor = rijAlg.CreateEncryptor(rijAlg.Key, rijAlg.IV);
+
+                using (MemoryStream msEncrypt = new MemoryStream())
+                {
+                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                    {
+                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                        {
+                            swEncrypt.Write(plainText);
+                        }
+                        encrypted = msEncrypt.ToArray();
+                    }
+                }
+            }
+            return encrypted;
+        }
+
+        private string DecryptStringFromBytes(byte[] cipherText, byte[] Key, byte[] IV)
+        {
+            if (cipherText == null || cipherText.Length <= 0)
+                throw new ArgumentNullException("cipherText");
+            if (Key == null || Key.Length <= 0)
+                throw new ArgumentNullException("Key");
+            if (IV == null || IV.Length <= 0)
+                throw new ArgumentNullException("IV");
+
+            string plaintext = null;
+
+            using (RijndaelManaged rijAlg = new RijndaelManaged())
+            {
+                rijAlg.Key = Key;
+                rijAlg.IV = IV;
+
+                ICryptoTransform decryptor = rijAlg.CreateDecryptor(rijAlg.Key, rijAlg.IV);
+                try
+                {
+                    using (MemoryStream msDecrypt = new MemoryStream(cipherText))
+                    {
+                        using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                        {
+                            using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                            {
+                                plaintext = srDecrypt.ReadToEnd();
+                            }
+                        }
+                    }
+                }
+                catch(Exception e)
+                {
+                    plaintext = Encoding.Unicode.GetString(cipherText);
+                }
+            }
+            return plaintext;
+        }       
 
         private void label1_Click(object sender, EventArgs e)
         {
@@ -164,7 +257,6 @@ namespace MulticastChat
 
         private void FormMain_Load(object sender, EventArgs e)
         {
-            defaultNameText = textBoxUserName.Text;
             this.textBoxPort.Text = "" + 10002;
             this.textBoxAddress.Text = "224.0.0.251";
             textBoxNewMessage.Focus();
@@ -250,6 +342,11 @@ namespace MulticastChat
             {
                 this.SendMessage(textBoxNewMessage.Text);
             }
+        }
+
+        private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            this.LeaveGroup();
         }
     }
 }
