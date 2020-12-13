@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MulticastChat
@@ -77,11 +71,6 @@ namespace MulticastChat
             receiveThread = new Thread(this.runThread);
             receiveThread.Start();
             this.SendMessage("has joined the chat!");
-            //this.AcceptButton = buttonSend;
-            //this.CancelButton = buttonEnd;
-            //this.buttonJoin.Enabled = false;
-            //this.buttonEnd.Enabled = true;
-            //this.buttonSend.Enabled = true;
             textBoxNewMessage.Focus();
 
         }
@@ -97,7 +86,6 @@ namespace MulticastChat
                 Application.DoEvents();
                 receiveThread.Abort();
                 //while (receiveThread.IsAlive) Application.DoEvents();
-
                 client.DropMulticastGroup(group);
                 client.Close();
                 client = null;
@@ -212,21 +200,6 @@ namespace MulticastChat
             return plaintext;
         }       
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void listBoxChat_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBoxPort_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void checkBoxUseEncryption_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBoxUseEncryption.Checked)
@@ -240,19 +213,9 @@ namespace MulticastChat
             }
         }
 
-        private void labelNewMessage_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void textBoxKey_TextChanged(object sender, EventArgs e)
         {
             textBoxKey.Text = textBoxKey.Text.Replace(" ", "");
-        }
-
-        private void labelPort_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -293,21 +256,6 @@ namespace MulticastChat
             buttonJoin.Enabled = true;
         }
 
-        private void labelKey_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox1_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void labelMessageChat_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void textBoxPort_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
@@ -319,11 +267,6 @@ namespace MulticastChat
         private void textBoxAddress_TextChanged(object sender, EventArgs e)
         {
             textBoxAddress.Text = textBoxAddress.Text.Replace(" ", "");
-        }
-
-        private void labelAddress_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void textBoxUserName_TextChanged(object sender, EventArgs e)

@@ -57,7 +57,6 @@
             this.labelUserName.Size = new System.Drawing.Size(83, 17);
             this.labelUserName.TabIndex = 0;
             this.labelUserName.Text = "User Name:";
-            this.labelUserName.Click += new System.EventHandler(this.label1_Click);
             // 
             // textBoxUserName
             // 
@@ -76,7 +75,6 @@
             this.labelAddress.Size = new System.Drawing.Size(64, 17);
             this.labelAddress.TabIndex = 2;
             this.labelAddress.Text = "Address:";
-            this.labelAddress.Click += new System.EventHandler(this.labelAddress_Click);
             // 
             // textBoxAddress
             // 
@@ -95,7 +93,6 @@
             this.labelPort.Size = new System.Drawing.Size(38, 17);
             this.labelPort.TabIndex = 4;
             this.labelPort.Text = "Port:";
-            this.labelPort.Click += new System.EventHandler(this.labelPort_Click);
             // 
             // textBoxPort
             // 
@@ -104,7 +101,6 @@
             this.textBoxPort.Name = "textBoxPort";
             this.textBoxPort.Size = new System.Drawing.Size(74, 22);
             this.textBoxPort.TabIndex = 3;
-            this.textBoxPort.TextChanged += new System.EventHandler(this.textBoxPort_TextChanged);
             this.textBoxPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxPort_KeyPress);
             // 
             // buttonJoin
@@ -137,7 +133,6 @@
             this.listBoxMessageChat.Name = "listBoxMessageChat";
             this.listBoxMessageChat.Size = new System.Drawing.Size(376, 180);
             this.listBoxMessageChat.TabIndex = 8;
-            this.listBoxMessageChat.SelectedIndexChanged += new System.EventHandler(this.listBoxChat_SelectedIndexChanged);
             // 
             // labelNewMessage
             // 
@@ -147,7 +142,6 @@
             this.labelNewMessage.Size = new System.Drawing.Size(100, 17);
             this.labelNewMessage.TabIndex = 10;
             this.labelNewMessage.Text = "New message:";
-            this.labelNewMessage.Click += new System.EventHandler(this.labelNewMessage_Click);
             // 
             // textBoxNewMessage
             // 
@@ -197,7 +191,6 @@
             this.labelKey.Size = new System.Drawing.Size(36, 17);
             this.labelKey.TabIndex = 14;
             this.labelKey.Text = "Key:";
-            this.labelKey.Click += new System.EventHandler(this.labelKey_Click);
             // 
             // groupBox1
             // 
@@ -214,7 +207,6 @@
             this.groupBox1.TabIndex = 15;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Chat configurations";
-            this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
             // groupBox2
             // 
