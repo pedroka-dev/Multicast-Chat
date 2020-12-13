@@ -43,56 +43,72 @@ namespace MulticastChat
 
         private void JoinGroup()
         {
-            if (!int.TryParse(textBoxPort.Text, out port))
-                throw new ApplicationException("Invalid Port Number");
-            if (!IPAddress.TryParse(textBoxAddress.Text, out group))
-                throw new ApplicationException("Invalid Multicast Group Address");
-
-            useEncription = checkBoxUseEncryption.Checked;
-
-            if (useEncription)
+            try
             {
-                while(textBoxKey.Text.Length < 16)  //cambiarra f*dida. 16 caraceres é string ideal pra ser usado como key e iv
+                if (!int.TryParse(textBoxPort.Text, out port))
+                    throw new ApplicationException("Invalid Port Number");
+                if (!IPAddress.TryParse(textBoxAddress.Text, out group))
+                    throw new ApplicationException("Invalid Multicast Group Address");
+
+                useEncription = checkBoxUseEncryption.Checked;
+
+                if (useEncription)
                 {
-                    textBoxKey.Text = textBoxKey.Text + " ";
+                    while (textBoxKey.Text.Length < 16)  //cambiarra f*dida. 16 caraceres é string ideal pra ser usado como key e iv
+                    {
+                        textBoxKey.Text = textBoxKey.Text + " ";
+                    }
+
+                    rijndaelEncryption.Key = Encoding.UTF8.GetBytes(textBoxKey.Text);
+                    rijndaelEncryption.IV = Encoding.UTF8.GetBytes(textBoxKey.Text);        //seria melhor se o iv fosse aleatorio...
                 }
 
-                rijndaelEncryption.Key = Encoding.UTF8.GetBytes(textBoxKey.Text);
-                rijndaelEncryption.IV = Encoding.UTF8.GetBytes(textBoxKey.Text);        //seria melhor se o iv fosse aleatorio...
+                client = new UdpClient();
+                client.Client.ExclusiveAddressUse = false;
+                client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                client.JoinMulticastGroup(group, TIME_TO_LIVE);
+                multiCastEP = new IPEndPoint(group, port);
+                client.Client.Bind(new IPEndPoint(IPAddress.Any, port));
+                this.stayAlive = true;
+                receiveThread = new Thread(this.runThread);
+                receiveThread.Start();
+                this.SendMessage("has joined the chat!");
+                this.Text = "Multicast Chat - User: " + textBoxUserName.Text + " - Address: " + textBoxAddress.Text;
+                textBoxNewMessage.Focus();
             }
-
-            client = new UdpClient();
-            client.Client.ExclusiveAddressUse = false;
-            client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-            client.JoinMulticastGroup(group, TIME_TO_LIVE);
-            multiCastEP = new IPEndPoint(group, port);
-            client.Client.Bind(new IPEndPoint(IPAddress.Any, port));
-            this.stayAlive = true;
-            receiveThread = new Thread(this.runThread);
-            receiveThread.Start();
-            this.SendMessage("has joined the chat!");
-            this.Text = "Multicast Chat - User: " + textBoxUserName.Text + " - Address: " + textBoxAddress.Text;
-            textBoxNewMessage.Focus();
+            catch (Exception e)
+            {
+                MessageBox.Show("An exception occurred when attempting to Join roup: \n"+e.ToString(), "Join Group Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                this.Dispose();
+            }
         }
 
         private void LeaveGroup()
         {
-            if (group != null)
+            try
             {
-                SendMessage("Leaving Chat");
-                Application.DoEvents();
-                Thread.Sleep(500);
-                stayAlive = false;
-                Application.DoEvents();
-                receiveThread.Abort();
-                client.DropMulticastGroup(group);
-                client.Close();
-                client = null;
-                group = null;
-                multiCastEP = null;
-                this.Text = "Multicast Chat";
+                if (group != null)
+                {
+                    SendMessage("Leaving Chat");
+                    Application.DoEvents();
+                    Thread.Sleep(500);
+                    stayAlive = false;
+                    Application.DoEvents();
+                    receiveThread.Abort();
+                    client.DropMulticastGroup(group);
+                    client.Close();
+                    client = null;
+                    group = null;
+                    multiCastEP = null;
+                    this.Text = "Multicast Chat";
 
-                Thread.Sleep(500);
+                    Thread.Sleep(500);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("An exception occurred when attempting to Leave Group: \n" + e.ToString(), "Leave Group Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Dispose();
             }
         }
 
@@ -224,7 +240,7 @@ namespace MulticastChat
         {
             if (textBoxUserName.Text.Length == 0 || textBoxAddress.Text.Length == 0 || textBoxPort.Text.Length == 0)
             {
-                MessageBox.Show("Fields 'User Name', 'Address' and 'Port' cannot be blank.", "Invalid Arguments");
+                MessageBox.Show("Fields 'User Name', 'Address' and 'Port' cannot be blank.", "Invalid Arguments", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else
             {
