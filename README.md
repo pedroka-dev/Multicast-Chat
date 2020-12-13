@@ -1,7 +1,7 @@
 # Introduction (English)
 To further demonstrate the capabilities of Multicasting and Symmetric Encryption, the goal of this project is to create multicast chat with optional message cryptography. 
 
-In this project the user can send and receive chat messages from other users communicating with a multicast address.  If desired, the user can encrypt his messages using the Advanced Encryption Standard (AES), also knwon as Rijndael. The algorithm key should be customizable, while the Initialization vector being be derived directly from the key.
+In this project the user can send and receive chat messages from other users communicating with a multicast address.  If desired, the user can encrypt his messages using the Advanced Encryption Standard (AES), also knwon as Rijndael. The algorithm key should be a customizable string that converts into a key, while the Initialization vector being be derived directly from the key.
 
 Keep in mind that deriving the IV from the key instead of generating a random value is NOT the best practice. This just has been done for demonstration purposes. 
 
@@ -9,7 +9,7 @@ Keep in mind that deriving the IV from the key instead of generating a random va
 # Introdução (Português)
 Para demonstrar mais além as capacidades do Multicasting e Criptografia Simétrica, o objetivo deste projeto é criar um chat multicast com criptografia opcional de mensagens.
 
-Neste projet o usuário pode mandar e receber mensage para outros usuário se comunicando com o endereço multicast. Se desejado, o usuário pode criptografar sua mensagem usando Advanced Encryption Standard (AES), também conhecido como Rijndael. A chave do algoritmo deve ser customizada, com o Vetor de Inicialização sendo derivado diretamente da chave.
+Neste projet o usuário pode mandar e receber mensage para outros usuário se comunicando com o endereço multicast. Se desejado, o usuário pode criptografar sua mensagem usando Advanced Encryption Standard (AES), também conhecido como Rijndael. A chave do algoritmo deve ser uma string customizada que é convertida em uma chave, com o Vetor de Inicialização sendo derivado diretamente da chave.
 
 Tenha em mente que derivar o IV da chave ao invés de gerar um valor aleatório NÂO é a melhor prática. Isso só foi feito para fins de demonstração.
 
