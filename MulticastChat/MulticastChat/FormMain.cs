@@ -52,13 +52,13 @@ namespace MulticastChat
 
             if (useEncription)
             {
-                byte[] key = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
-                byte[] iv = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F};
+                while(textBoxKey.Text.Length < 16)  //cambiarra f*dida. 16 caraceres é string ideal pra ser usado como key e iv
+                {
+                    textBoxKey.Text = textBoxKey.Text + " ";
+                }
 
-                rijndaelEncryption.Key = key;
-                rijndaelEncryption.IV = iv;
-                //rijndaelEncryption.Key = Encoding.UTF32.GetBytes(textBoxKey.Text);
-                //rijndaelEncryption.IV = Encoding.Unicode.GetBytes(textBoxKey.Text);
+                rijndaelEncryption.Key = Encoding.UTF8.GetBytes(textBoxKey.Text);
+                rijndaelEncryption.IV = Encoding.UTF8.GetBytes(textBoxKey.Text);        //seria melhor se o iv fosse aleatorio...
             }
 
             client = new UdpClient();
@@ -71,8 +71,8 @@ namespace MulticastChat
             receiveThread = new Thread(this.runThread);
             receiveThread.Start();
             this.SendMessage("has joined the chat!");
+            this.Text = "Multicast Chat - User: " + textBoxUserName.Text + " - Address: " + textBoxAddress.Text;
             textBoxNewMessage.Focus();
-
         }
 
         private void LeaveGroup()
@@ -85,12 +85,12 @@ namespace MulticastChat
                 stayAlive = false;
                 Application.DoEvents();
                 receiveThread.Abort();
-                //while (receiveThread.IsAlive) Application.DoEvents();
                 client.DropMulticastGroup(group);
                 client.Close();
                 client = null;
                 group = null;
                 multiCastEP = null;
+                this.Text = "Multicast Chat";
 
                 Thread.Sleep(500);
             }
@@ -117,7 +117,6 @@ namespace MulticastChat
                 Thread.Sleep(10);
             }
         }
-
 
         public void displayMessage(string message)
         {
@@ -192,9 +191,9 @@ namespace MulticastChat
                         }
                     }
                 }
-                catch(Exception e)
+                catch(Exception)    //se decryption não der certo, faz conversao normal.
                 {
-                    plaintext = Encoding.Unicode.GetString(cipherText);
+                    plaintext = Encoding.Unicode.GetString(cipherText); 
                 }
             }
             return plaintext;
@@ -211,11 +210,6 @@ namespace MulticastChat
                 textBoxKey.Enabled = false;
                 textBoxKey.Clear();
             }
-        }
-
-        private void textBoxKey_TextChanged(object sender, EventArgs e)
-        {
-            textBoxKey.Text = textBoxKey.Text.Replace(" ", "");
         }
 
         private void FormMain_Load(object sender, EventArgs e)
