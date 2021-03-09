@@ -18,6 +18,8 @@ Tenha em mente que derivar o IV da chave ao invés de gerar um valor aleatório 
 
 ![alt text](https://raw.githubusercontent.com/pedro-ca/Multicast-chat/main/MulticastChat/Images/ChatInitialState.JPG)
 
+---
+
 # Technical Details
 The chat is WindowsForms made on C# .NET Framework v4.7.2, utilizing the UdpClient from the library System.Net.Sockets to communicate of a Multicast Address and Port of the .ser's choice.
 
@@ -37,6 +39,8 @@ Alguém com a chave de criptografia pode ler todas as mensagems com tanto qualqu
 </details>
 
 ![alt text](https://raw.githubusercontent.com/pedro-ca/Multicast-chat/main/MulticastChat/Images/rijandel.png)
+
+---
 
 # Screenshots
 
