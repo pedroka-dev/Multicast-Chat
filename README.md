@@ -1,7 +1,7 @@
 # Introduction
 To further demonstrate the capabilities of Multicasting and Symmetric Encryption, the goal of this project is to create multicast chat with optional message cryptography. 
 
-In this project the user can send and receive chat messages from other users communicating with a multicast address.  If desired, the user can encrypt his messages using the Advanced Encryption Standard (AES), also knwon as Rijndael. The algorithm key should be a customizable string that converts into a key, while the Initialization vector being be derived directly from the key.
+In this project the user can send and receive chat messages from other users communicating with a multicast address.  If desired, the user can encrypt his messages using the Advanced Encryption Standard (AES), also known as Rijndael. The algorithm key should be a customizable string that converts into a key, while the Initialization vector being be derived directly from the key.
 
 Keep in mind that deriving the IV from the key instead of generating a random value is NOT the best practice. This just has been done for demonstration purposes. 
 
@@ -21,7 +21,7 @@ Tenha em mente que derivar o IV da chave ao invés de gerar um valor aleatório 
 ---
 
 # Technical Details
-The chat is WindowsForms made on C# .NET Framework v4.7.2, utilizing the UdpClient from the library System.Net.Sockets to communicate of a Multicast Address and Port of the .ser's choice.
+The chat is WindowsForms made on C# .NET Framework v4.7.2, utilizing the UdpClient from the library System.Net.Sockets to communicate of a Multicast Address and Port of the user's choice.
 
 Encryption can be optionally toggled on. Utilizing the Advanced Encryption Standard (AES), the user can choose any string smaller or equal to 16 characters as key. The 16 characters length has been choosed because this format is both compatible with key and IV with least conversions, as 16 character string has always raw 128 bits after conversion from the UTF-8 format. 
 
